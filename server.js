@@ -1,17 +1,22 @@
 'use strict' ;
-require('dotenv').config ;
+require('dotenv').config() ;
 const express = require('express') ;
 const cors = require('cors') ;
 const axios =require('axios') ;
+const { request } = require('express');
 const server = express() ;
 server.use(cors());
 
-const PORT = process.env ;
+let PORT = process.env.PORT || 3001;
+console.log(PORT);
 let numberOfMovie  =5 ;
-let url =`https://api.themoviedb.org/3/trending/all/week/randoom?api_key=${process.env.APIKEY}&{numberOfMovie}` ;
+let url =`${process.env.API_URL}?api_key=${process.env.APIKEY}&language=en-US` ;
+//let url ="https://api.themoviedb.org/3/trending/all/week?api_key=37ddc7081e348bf246a42f3be2b3dfd0&language=en-US" ;
+console.log(url);
 let userSearch = "Spider-Man: No Way Home";
 let vote_average = 5.6;
-let moviesdata = require('./task11/data.json');
+//let moviesdata = require('./task11/data.json');
+//const { process } = require('ipaddr.js');
 
 server.get('/',handelHomePage);
 server.get('/favorite',handelFavoritePage);
@@ -30,7 +35,7 @@ function Data (title, posterpath , overview )
 
 
 
-function Trend (id,title,poster_path,overview){
+function Trend (id,title,poster_path,overview,release_date){
     this.id =id ;
     this.title=title;
     this.poster_path =poster_path ;
@@ -43,20 +48,24 @@ function Trend (id,title,poster_path,overview){
 function handelTrending (request,response){
     let newArr = [];
     axios.get(url).then((result)=>{
-            result.data.recipes.forEach(recipe =>{
+       // console.log(result.data);
+        //console.log(result.data.results);
+            result.data.results.forEach(trend =>{
             newArr.push(new Trend(trend.id,trend.title,trend.poster_path,trend.overview,trend.release_date));
         })
-        res.status(200).json(newArr);
+        console.log(newArr);
+        response.status(200).json(newArr);
+
 
     }).catch((err)=>{
-        errorHandler(err,req,res);
+        errorHandler(err,request,response);
 
     })
 }
   
 
 function handelSearching (req,res){
-    let url =`https://api.themoviedb.org/3/trending/all/week/randoom?api_key=${process.env.APIKEY}&{numberOfMovie}&query=${userSearch}&{vote_average}`;
+    let url =`${process.env.API_URL}?api_key=${process.env.APIKEY}&language=en-US&{numberOfMovie}&query=${userSearch}&{vote_average}`;
 
     axios.get(url)
     .then(result=>{
@@ -100,5 +109,5 @@ function errorHandler (error,req,res){
 }
 
 server.listen(PORT,()=>{
-    console.log(`listining to port ${PORT}`)
-})
+    console.log(`listining to port ${PORT}`);
+});
