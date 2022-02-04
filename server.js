@@ -44,7 +44,7 @@ function Movies(id, title, poster_path, overview, release_date) {
 
 function favMovieHandler(request, response) {
     const moviee = request.body;
-    let sql = `INSERT IN TO Movies(title,poster_path,overview,release_date)VALUES($1,$2,$3,$4)RETURNING*;`;
+    let sql = `INSERT IN TO MoviesTable(title,poster_path,overview,release_date)VALUES($1,$2,$3,$4)RETURNING*;`;
     let values = [moviee.title, moviee.poster_path, moviee.overview, moviee.release_date];
     client.query(sql, values).then(data => {
         response.status(200).json(data.rows);
@@ -56,7 +56,7 @@ function favMovieHandler(request, response) {
 
 
     function getFavMovieHandler(request, response) {
-        let sql = `SELECT * FROM Movies;`;
+        let sql = `SELECT * FROM MoviesTable ;`;
         client.query(sql).then(data => {
             response.status(200).json(data.rows);
         }).catch(error => {
@@ -99,7 +99,7 @@ function favMovieHandler(request, response) {
                 console.log(mov);
                 return mov ;
             });
-            response.status(200).json(movies); 
+            response.status(200).json(mov); 
 
          }).catch((err)=>{
             errorHandler(err,request,response);

@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS Movies;
-CREATE TABLE Movies(
+CREATE TABLE MoviesTable(
 
      id SERIAL PRIMARY KEY,
      title VARCHAR(255),
