@@ -145,4 +145,3 @@ const movie = req.body;
     }).catch(error=>{
         console.log(error);
     })
-
