@@ -14,7 +14,7 @@ const client = new pg.Client(process.env.DATABASE_URL);
 
 
 
-server.get('/', handelHomePage);
+//server.get('/', handelHomePage);
 server.get('/favorite', handelFavoritePage);
 server.get('/trending', handelTrending);
 server.get('/search', handelSearching);
@@ -34,84 +34,86 @@ function Data(title, posterpath, overview) {
 
 
 
-function Movies(id, title, poster_path, overview, release_date) {
-    this.id = id;
+function Movies(title,poster_path,overview,release_date) {
     this.title = title;
     this.poster_path = poster_path;
     this.overview = overview;
     this.release_date = release_date;
 }
 
-function favMovieHandler(request, response) {
-    const moviee = request.body;
-    let sql = `INSERT IN TO Movies(title,poster_path,overview,release_date)VALUES($1,$2,$3,$4)RETURNING*;`;
-    let values = [moviee.title, moviee.poster_path, moviee.overview, moviee.release_date];
-    client.query(sql, values).then(data => {
-        response.status(200).json(data.rows);
-    }).catch(error => {
-        errorHandler(err, request, response);
-    });
+function favMovieHandler(req, res) {
+//     const movie = request.body;
+
+//   let sql = `INSERT INTO MoviesTable(title,poster_path,overview,release_date) VALUES ($1,$2,$3,$4) RETURNING *;`
+//   let values=[movie.title,movie.poster_path,movie.overview,movie.release_date];
+//   client.query(sql,values).then(data =>{
+//       response.status(200).json(data.rows);
+//   }).catch(error=>{
+//       errorHandler(error,request,response)
+//   });
+const movie = req.body;
+  console.log(req.body);
+  let sql = `INSERT INTO MoviesTable(title,poster_path,overview,release_date) VALUES ($1,$2,$3,$4) RETURNING *;`
+  let values=[movie.title,movie.poster_path,movie.overview,movie.release_date];
+  client.query(sql,values).then(data =>{
+      res.status(200).json(data.rows);
+  }).catch(error=>{
+      errorHandler(error,req,res)
+  });
 }
 
 
 
+
     function getFavMovieHandler(request, response) {
-        let sql = `SELECT * FROM Movies;`;
-        client.query(sql).then(data => {
-            response.status(200).json(data.rows);
-        }).catch(error => {
-            errorHandler(error, request, response);
+        let sql = `SELECT * FROM MoviesTable;`;
+        client.query(sql).then(data=>{
+           response.status(200).json(data.rows);
+        }).catch(error=>{
+            errorHandler(error,request,response)
         });
     }
 
 
 
-    function handelTrending(request, response) {
+    function handelTrending(request,response) {
         let newArr = [];
-        axios.get(url).then((result) => {
-            // console.log(result.data);
-            //console.log(result.data.results);
-            result.data.results.forEach(trend => {
-                newArr.push(new Movies(movies.id, movies.title, movies.poster_path, movies.overview, movies.release_date));
-            })
-            console.log(newArr);
-            response.status(200).json(newArr);
-
-
-        }).catch((err) => {
-            errorHandler(err, request, response);
-
+    axios.get(url)
+     .then((result)=>{
+        result.data.results.forEach(movie =>{
+            newArr.push(new Movies(movie.id,movie.title,movie.poster_path,movie.overview,movie.release_date));
         })
-    }
+        response.status(200).json(newArr);
+
+    }).catch(error=>{
+        console.log(error);
+    })
+
+}
 
 
     function handelSearching (request,response){
-        
-        let userSearch =request.query.userSearch;
-        let url =`${process.env.API_URL}?api_key=${process.env.APIKEY}&query=${userSearch}`;
-   //console.log(userSearch,url);
-   
+        let userSearch ="Nightmare Alley";
+        let url = `${process.env.API_URL}?api_key=${process.env.APIKEY}&language=en-US&query=${userSearch}` ;
         axios.get(url)
         .then(result=>{
-//console.log(result.data.results);
+           
             let movies = result.data.results.map(movie =>{
-                let mov = new Movies(movie.id,movie.title,movie.poster_path,movie.overview,movie.release_date);
-                console.log(mov);
-                return mov ;
+                return new Movies(movie.id,movie.title,movie.poster_path,movie.overview,movie.release_date);
             });
-            response.status(200).json(movies); 
-
-         }).catch((err)=>{
-            errorHandler(err,request,response);
-
+            response.status(200).json(movies);  
+        }).catch(error=>{
+            console.log(error);
         })
+    
     }
+    
 
-    function handelHomePage(request, response) {
-        let obj = new Data(moviesdata.title, moviesdata.poster_path, moviesdata.overview);
-        console.log(obj);
-        return response.status(200).json(obj);
-    }
+    // function handelHomePage(request, response) {
+    //     let obj = new Data(moviesdata.title, moviesdata.poster_path, moviesdata.overview);
+    //     console.log(obj);
+    //     return response.status(200).json(obj);
+    // }
 
 
 
