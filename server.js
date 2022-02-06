@@ -169,13 +169,13 @@ function errorHandler(error, request, response) {
 
 
 
-function Movies(id, title, poster_path, overview, release_date) {
-    this.id = id;
+function Movies(title,poster_path,overview,release_date) {
     this.title = title;
     this.poster_path = poster_path;
     this.overview = overview;
     this.release_date = release_date;
 }
+
 
 function favMovieHandler(request, response) {
     const moviee = request.body;
@@ -186,7 +186,9 @@ function favMovieHandler(request, response) {
     }).catch(error => {
         errorHandler(err, request, response);
     });
+
 }
+
 
 
 
@@ -220,6 +222,7 @@ function handelTrending(request, response) {
 }
 
 
+
 function handelSearching(request, response) {
 
     let userSearch = request.query.userSearch;
@@ -250,6 +253,7 @@ function handelHomePage(request, response) {
 
 
 
+
 function handelFavoritePage(request, response) {
     return response.status(200).send("Welcome to Favorite Page");
 }
@@ -269,6 +273,7 @@ function errorHandler(error, request, response) {
     }
     response.status(500).send(err);
 
+
 }
 
 client.connect().then(() => {
@@ -278,4 +283,5 @@ client.connect().then(() => {
 }).catch(error => {
     console.log(error);
 })
+
 
