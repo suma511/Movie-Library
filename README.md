@@ -9,7 +9,6 @@
 ## Overviews
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
-
+we have to update our work fom the previous task 12 by adding tow routs and write there function wone of them is adding movies by post method and the other is by taking the added movies by get method 
 ## Project Features
-<!-- What are the features included in you app --
+hit and post method

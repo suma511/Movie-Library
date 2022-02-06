@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS MoviesTable;
+
 CREATE TABLE MoviesTable(
 
      id SERIAL PRIMARY KEY,
