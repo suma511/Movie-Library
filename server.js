@@ -113,8 +113,8 @@ function getFavMovieHandler(request, response) {
 function updateMoviesHandler(req, res) {
     const id = req.params.id;
     const movie = req.body;
-    const sql = `UPDATE MoviesTable SET title=$1,poste_path=$2,overview=$3,release_date=$4,WHERE id=$5 RETURNING *;`;
-    let values = [movie.title, movie.poster_path, movie.overview, movie.release_date];
+    const sql = `UPDATE MoviesTable SET title=$1,poster_path=$2,overview=$3,release_date=$4 WHERE id=$5 RETURNING *;`;
+    let values = [movie.title, movie.poster_path, movie.overview, movie.release_date,id];
     client.query(sql, values).then(data => {
         res.status(200).json(data.rows);
 
@@ -125,7 +125,7 @@ function updateMoviesHandler(req, res) {
 
 function getbyid(request, response) {
     const id = request.params.id;
-    let sql = `SELECT * FROM MoviesTableWHERE id=${id};`;
+    let sql = `SELECT * FROM MoviesTable WHERE id=${id};`;
     client.query(sql).then(data => {
         response.status(200).json(data.rows);
     }).catch(error => {
