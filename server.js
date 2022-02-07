@@ -10,8 +10,10 @@ server.use(cors());
 server.use(express.json());
 let PORT = process.env.PORT;
 let url = `${process.env.API_URL}?api_key=${process.env.APIKEY}&language=en-US`;
-const client = new pg.Client(process.env.DATABASE_URL);
-
+//const client = new pg.Client(process.env.DATABASE_URL);
+const client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false } })
 
 
 
